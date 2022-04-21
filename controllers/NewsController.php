@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\CategoryNews;
 use app\models\News;
 use app\models\NewsSearch;
 use yii\web\Controller;
@@ -71,6 +72,7 @@ class NewsController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+                $this->addCategoryNews($model->id);
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -94,6 +96,7 @@ class NewsController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            $this->addCategoryNews($model->id);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -103,16 +106,41 @@ class NewsController extends Controller
     }
 
     /**
+     * Simple stick news to their categories using category_id separated by comma
+     * @param $news_id
+     * @return void
+     */
+    public function addCategoryNews($news_id)
+    {
+        $post = $this->request->post();
+        $category_ids = isset($post['News']['category_id']) ? $post['News']['category_id'] : 0;
+        $category_ids = explode(',', $category_ids);
+        CategoryNews::deleteAll([
+            'news_id' => $news_id
+        ]);
+        foreach ($category_ids as $category_id) {
+            $category_news_model = new CategoryNews();
+            $category_news_model->category_id = (int)trim($category_id);
+            $category_news_model->news_id = $news_id;
+            $category_news_model->insert();
+        }
+    }
+
+    /**
      * Deletes an existing News model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        //Delete data from category_news
+        CategoryNews::deleteAll([
+            'news_id' => $id
+        ]);
         return $this->redirect(['index']);
     }
 
