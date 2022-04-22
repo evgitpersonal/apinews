@@ -23,7 +23,6 @@ class News extends ActiveRecord
         return 'news';
     }
 
-
     /**
      * {@inheritdoc}
      */

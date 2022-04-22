@@ -3,12 +3,10 @@
 namespace app\controllers;
 
 
-use yii\rest\ActiveController;
-
 /**
  * CategoryController implements the CRUD actions for Category model.
  */
-class CategoryController extends ActiveController
+class CategoryController extends BaseApiController
 {
     public $modelClass = 'app\models\Category';
 
