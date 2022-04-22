@@ -30,7 +30,7 @@ class News extends ActiveRecord
     public function rules()
     {
         return [
-            [['content'], 'required'],
+            [['title', 'content'], 'required'],
             [['content'], 'string'],
             [['title'], 'string', 'max' => 255],
         ];
@@ -48,6 +48,9 @@ class News extends ActiveRecord
         ];
     }
 
+    /**
+     * @return string[]
+     */
     public function fields()
     {
         return [
@@ -58,10 +61,53 @@ class News extends ActiveRecord
         ];
     }
 
+    /**
+     * @return Category[]|array|ActiveRecord[]
+     */
     public function getCategories()
     {
         return Category::find()->select('id, title')
             ->leftJoin('category_news',"category_news.category_id = category.id")
             ->where(['category_news.news_id' => $this->id])->asArray()->all();
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        $categories = Yii::$app->request->getBodyParam('categories', 0);
+        CategoryNews::deleteAll([
+            'news_id' => $this->id
+        ]);
+        if( is_array($categories) ) {
+            foreach ($categories as $category_id) {
+                $category_id = (int)$category_id;
+                if( Category::find()->where("id = $category_id")->exists() ) {
+                    $CategoryNews = new CategoryNews();
+                    $CategoryNews->category_id = $category_id;
+                    $CategoryNews->news_id = $this->id;
+                    $CategoryNews->save();
+                }
+            }
+        } else {
+            $CategoryNews = new CategoryNews();
+            $CategoryNews->category_id = (int)$categories;
+            $CategoryNews->news_id = $this->id;
+            $CategoryNews->save();
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function afterDelete()
+    {
+        CategoryNews::deleteAll([
+            'news_id' => $this->id
+        ]);
+    }
+
 }
