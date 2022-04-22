@@ -2,161 +2,17 @@
 
 namespace app\controllers;
 
-use app\models\CategoryNews;
-use app\models\News;
-use app\models\NewsSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use yii\rest\ActiveController;
 
 /**
  * NewsController implements the CRUD actions for News model.
  */
-class NewsController extends Controller
+class NewsController extends ActiveController
 {
-    /**
-     * @inheritDoc
-     */
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-            ]
-        );
-    }
+    public $modelClass = 'app\models\News';
 
-    /**
-     * Lists all News models.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        $searchModel = new NewsSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
 
-    /**
-     * Displays a single News model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
 
-    /**
-     * Creates a new News model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new News();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                $this->addCategoryNews($model->id);
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing News model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            $this->addCategoryNews($model->id);
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Simple stick news to their categories using category_id separated by comma
-     * @param $news_id
-     * @return void
-     */
-    public function addCategoryNews($news_id)
-    {
-        $post = $this->request->post();
-        $category_ids = isset($post['News']['category_id']) ? $post['News']['category_id'] : 0;
-        $category_ids = explode(',', $category_ids);
-        CategoryNews::deleteAll([
-            'news_id' => $news_id
-        ]);
-        foreach ($category_ids as $category_id) {
-            $category_news_model = new CategoryNews();
-            $category_news_model->category_id = (int)trim($category_id);
-            $category_news_model->news_id = $news_id;
-            $category_news_model->insert();
-        }
-    }
-
-    /**
-     * Deletes an existing News model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     * @throws \yii\db\StaleObjectException
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-        //Delete data from category_news
-        CategoryNews::deleteAll([
-            'news_id' => $id
-        ]);
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the News model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return News the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = News::findOne(['id' => $id])) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
 }

@@ -18,6 +18,7 @@ class m220421_081850_create_news_table extends Migration
             'content' => $this->text()->notNull()->defaultValue(''),
         ]);
 
+
         $this->batchInsert('news', ['title', 'content'], [
             ['News from Ukraine 1', 'Content for news from Ukraine 1'],
             ['News from Ukraine 2', 'Content for news from Ukraine 2'],
@@ -25,8 +26,8 @@ class m220421_081850_create_news_table extends Migration
             ['News from World 1', 'Content for news from World 1'],
         ]);
 
-        $this->batchInsert('category_news', ['category_id', 'news_id'], [
-            [1, 1], [2, 1], [2, 3], [3, 2], [3, 3],
+        $this->batchInsert('category_news', ['news_id', 'category_id'], [
+            [1, 1], [2, 1], [2, 3], [3, 2], [3, 3], [4, 3]
         ]);
     }
 

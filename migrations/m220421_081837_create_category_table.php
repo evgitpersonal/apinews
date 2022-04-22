@@ -17,6 +17,7 @@ class m220421_081837_create_category_table extends Migration
             'title' => $this->string()->notNull()->defaultValue(''),
             'description' => $this->text()->notNull()->defaultValue(''),
         ]);
+
         $this->batchInsert('category', ['title', 'description'], [
             ['Ukraine', 'News from Ukraine'],
             ['Europe', 'News from Europe'],
