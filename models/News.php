@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Exception;
 use Yii;
 use yii\db\ActiveRecord;
 
@@ -71,7 +72,7 @@ class News extends ActiveRecord
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function afterSave($insert, $changedAttributes)
     {
