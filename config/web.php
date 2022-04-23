@@ -24,8 +24,7 @@ $config = [
         ],
         'user' => [
             'identityClass' => 'app\models\User',
-            'enableAutoLogin' => false,
-            'enableSession' => false,
+            'enableAutoLogin' => true,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -61,6 +60,11 @@ $config = [
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'category',
+                    'pluralize' => false,
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'user',
                     'pluralize' => false,
                 ],
             ],
