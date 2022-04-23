@@ -14,9 +14,11 @@ class m220421_081850_create_news_table extends Migration
     {
         $this->createTable('news', [
             'id' => $this->primaryKey(),
-            'title' => $this->string()->notNull()->unique()->defaultValue(''),
+            'title' => $this->string()->unique(),
             'content' => $this->text()->notNull()->defaultValue(''),
-        ]);
+        ],
+            'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB'
+        );
 
 
         $this->batchInsert('news', ['title', 'content'], [

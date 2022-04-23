@@ -14,9 +14,11 @@ class m220421_081837_create_category_table extends Migration
     {
         $this->createTable('category', [
             'id' => $this->primaryKey(),
-            'title' => $this->string()->notNull()->unique()->defaultValue(''),
+            'title' => $this->string()->unique(),
             'description' => $this->text()->notNull()->defaultValue(''),
-        ]);
+        ],
+            'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB'
+        );
 
         $this->batchInsert('category', ['title', 'description'], [
             ['Ukraine', 'News from Ukraine'],

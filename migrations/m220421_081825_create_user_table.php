@@ -15,10 +15,12 @@ class m220421_081825_create_user_table extends Migration
     {
         $this->createTable('user', [
             'id' => $this->primaryKey(),
-            'username' => $this->string(50)->notNull()->unique()->defaultValue(''),
+            'username' => $this->string(50)->unique(),
             'password' => $this->string()->notNull()->defaultValue(''),
             'accessToken' => $this->string()->notNull()->defaultValue(''),
-        ]);
+        ],
+            'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB'
+        );
         $this->createIndex(
             'idx-user-accessToken',
             'user',
