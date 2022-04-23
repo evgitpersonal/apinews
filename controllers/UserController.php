@@ -41,7 +41,6 @@ class UserController extends ActiveController
         elseif ( in_array($action, ['view', 'update', 'delete']) ) {
             $users = User::find()->asArray()->all();
             foreach ($users as $user) {
-                var_dump($user['accessToken'] === Yii::$app->request->get('access-token'));
                 if ( $user['accessToken'] === Yii::$app->request->get('access-token')
                         && (int)$user['id'] === (int)$this->actionParams['id'] ) {
                     return true;
