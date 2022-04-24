@@ -1,0 +1,14 @@
+actor: ApiTester
+step_decorators:
+  - \Codeception\Step\AsJson
+modules:
+  enabled:
+    - Yii2:
+        entryScrip: index-test.php
+    - REST:
+        url: 'http://localhost:8080/index-test.php/'
+        depends: PhpBrowser
+        part: JSON
+        configFile: 'config/test.php'
+  config:
+    - Yii2

@@ -51,9 +51,9 @@ Edit the file `config/db.php` with real data, for example:
 ```php
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
+    'dsn' => 'mysql:host=localhost;dbname=apinews',
     'username' => 'root',
-    'password' => '1234',
+    'password' => '',
     'charset' => 'utf8',
 ];
 ```
@@ -62,14 +62,25 @@ return [
 - Yii won't create the database for you, this has to be done manually before you can access it.
 - Check and edit the other files in the `config/` directory to customize your application as required.
 
+
 Use project migrations to create tables
 and fill them with test data using console command:
 ```
 yii migrate
 ```
 
+Run yii server in local using console command:
+```
+php yii serve
+```
+
 REST API
 -------------
+
+Request URL in local:
+```
+http://localhost:8080/
+```
 
 All data that will be sent and received have to be in JSON format.
 
@@ -79,7 +90,7 @@ Access-token for the test user 'admin' will be generated during migrations.
 
 CREATE USER
 ```
-Request: POST /web/user
+Request: POST /user
 ```
 ```JSON
 {
@@ -101,7 +112,7 @@ Response:
 
 SHOW USER
 ```
-Request: GET /web/user/{user_id}?access-token={accessToken}
+Request: GET /user/{user_id}?access-token={accessToken}
 ```
 ```
 Response:
@@ -117,7 +128,7 @@ Response:
 
 UPDATE USER
 ```
-Request: PUT /web/user/{user_id}?access-token={accessToken}
+Request: PUT /user/{user_id}?access-token={accessToken}
 ```
 ```JSON
 {
@@ -139,7 +150,7 @@ Response:
 
 DELETE USER
 ```
-Request: DELETE /web/user/{user_id}?access-token={accessToken}
+Request: DELETE /user/{user_id}?access-token={accessToken}
 ```
 ```
 Response: empty body if correct
@@ -150,7 +161,7 @@ Response: empty body if correct
 
 SHOW all categories with their news
 ```
-Request: GET /web/category
+Request: GET /category
 ```
 ```
 Response:
@@ -191,7 +202,7 @@ Response:
 
 SHOW category and news from this category by category_id
 ```
-Request: GET /web/category/{category_id}
+Request: GET /category/{category_id}
 ```
 ```
 Response:
@@ -220,7 +231,7 @@ Response:
 
 CREATE category
 ```
-Request: POST /web/category/?access-token={accessToken}
+Request: POST /category/?access-token={accessToken}
 ```
 ```JSON
   {
@@ -242,7 +253,7 @@ Response:
 
 UPDATE category
 ```
-Request: PUT /web/category/{category_id}?access-token={accessToken}
+Request: PUT /category/{category_id}?access-token={accessToken}
 ```
 ```JSON
   {
@@ -264,7 +275,7 @@ Response:
 
 DELETE category
 ```
-Request: DELETE /web/category/{category_id}?access-token={accessToken}
+Request: DELETE /category/{category_id}?access-token={accessToken}
 ```
 ```
 Response: empty body if correct
@@ -275,7 +286,7 @@ Response: empty body if correct
 
 SHOW all news with their categories
 ```
-Request: GET /web/news
+Request: GET /news
 ```
 ```
 Response:
@@ -313,7 +324,7 @@ Response:
 
 SHOW news by news_id
 ```
-Request: GET /web/news/{news_id}
+Request: GET /news/{news_id}
 ```
 ```
 Response:
@@ -336,7 +347,7 @@ Response:
 
 Create news
 ```
-Request: POST /web/news/?access-token={accessToken}
+Request: POST /news/?access-token={accessToken}
 ```
 ```JSON
 {    
@@ -366,7 +377,7 @@ Response:
 
 Update news
 ```
-Request: PUT /web/news/{news_id}?access-token={accessToken}
+Request: PUT /news/{news_id}?access-token={accessToken}
 ```
 ```JSON
 {    
@@ -397,7 +408,7 @@ Response:
 
 Delete news
 ```
-Request: DELETE /web/news/{news_id}?access-token={accessToken}
+Request: DELETE /news/{news_id}?access-token={accessToken}
 ```
 ```
 Response: empty body if correct
